@@ -117,10 +117,22 @@
                 <li class="page-item" id='3'>
                     <a class="page-link" id='3-1' href="#">Low price Analysis</a></li>
 
+
             </ul>
+
+
+
+
+
         </nav>
 
+
+
         <div id="graph" class="d-flex flex-column"></div>
+        <div style="margin: 0.67em 0;display:none;" id="annote"><button type="button" class="btn btn-outline-success"
+                id="4">Show Events</button></div>
+        <div style="margin: 0.67em 0;display:none;" id="annote2"><button type="button" class="btn btn-outline-success"
+                    id="5">Show Events</button></div>
         <h2 id="text">Price Trending</h2>
         <p id="p">This animation shows the trending of BP stocks in these 30 years. It shows that BP's stock seems has a
             very changing curve.
@@ -153,6 +165,7 @@
         d3.csv("BP.csv", function (error, d) {
             if (error) throw error;
             var initialGraph = function (data, status) {
+
 
                 var line = d3.line()
                     .x(function (d) { return x(new Date(d.Date)) })
@@ -260,7 +273,7 @@
                     focus.select('text').text(formatCurrency(d.Close));
                     // console.log(i)
                 }
-                
+
 
 
             };
@@ -276,10 +289,11 @@
             document.getElementById("2-1").addEventListener("click", function () {
                 d3.select("svg").remove();
                 initialGraph(d, 2);
-
                 document.getElementById('2').className = "page-item active";
                 document.getElementById('1').className = "page-item ";
                 document.getElementById('3').className = "page-item ";
+                document.getElementById('annote').style = "margin: 0.67em 0;";
+                document.getElementById('annote2').style = "margin: 0.67em 0;display:none;";
                 document.getElementById("text").innerText = "High price Analysis";
                 document.getElementById("p").innerText =
                     "The green line of the chart shows when the price is higher than 50. There have 3 sections above $50, " +
@@ -287,52 +301,89 @@
                     "In 2003, the energy crisis also caused BP stock price higher than before, aboving $60 which nerver showing again in the future. After the Financial crisis of 2007–2008, the BP stock price" +
                     " back to $50 agian. ";
 
+                document.getElementById("4").addEventListener("click", function () {
+
+
+                    /* Code below relevant for annotations */
+                    const annotations = [{
+                        note: { label: "BP and Amoco Merge", wrap: 100 },
+                        subject: {
+                            y1: margin.top,
+                            y2: height - margin.bottom
+                        },
+                        y: margin.top,
+                        data: { x: "1/1/1999" } //position the x based on an x scale
+                    },
+
+                    {
+                        note: { label: "2003 energy crisis" },
+                        subject: {
+                            y1: margin.top,
+                            y2: height - margin.bottom
+                        },
+                        y: margin.top,
+                        data: { x: "1/1/2003" }
+                    }
+
+                    ]
+
+                    const type = d3.annotationCustomType(
+                        d3.annotationXYThreshold,
+                        {
+                            "note": {
+                                "lineType": "none",
+                                "orientation": "top",
+                                "align": "middle"
+                            }
+                        }
+                    )
+
+                    const makeAnnotations = d3.annotation()
+                        .type(type)
+                        //Gives you access to any data objects in the annotations array
+                        .accessors({
+                            x: function (d) { return x(new Date(d.x)) },
+                            y: function (d) { return y(d.y) }
+                        })
+                        .annotations(annotations)
+                        .textWrap(30)
+
+                    d3.select("svg")
+                        .append("g")
+                        .attr("class", "annotation-group")
+                        .call(makeAnnotations)
+
+
+
+                });
+
                 /* Code below relevant for annotations */
-                const annotations = [{
-                    note: { label: "BP and Amoco Merge", wrap: 100 },
-                    subject: {
-                        y1: margin.top,
-                        y2: height - margin.bottom
+                const annotations = [
+                    {
+                        note: { label: "Above $50", wrap: 100, },
+                        className: "above",
+                        disable: ["connector"],
+                        subject: {
+                            x1: x(new Date('5/7/1999')),
+                            x2: x(new Date('8/12/2002'))
+                        },
+                        x: x(new Date('5/7/1999')),
+                        dx: -50,
+                        data: { y: 50 }
                     },
-                    y: margin.top,
-                    data: { x: "1/1/1999" } //position the x based on an x scale
-                },
 
-                {
-                    note: { label: "2003 energy crisis" },
-                    subject: {
-                        y1: margin.top,
-                        y2: height - margin.bottom
-                    },
-                    y: margin.top,
-                    data: { x: "1/1/2003" }
-                },
-
-                {
-                    note: { label: "Above $50", wrap: 100, },
-                    className: "above",
-                    disable: ["connector"],
-                    subject: {
-                        x1: x(new Date('5/7/1999')),
-                        x2: x(new Date('8/12/2002'))
-                    },
-                    x: x(new Date('5/7/1999')),
-                    dx: -50,
-                    data: { y: 50 }
-                },
-
-                {
-                    note: { label: "Above $60", wrap: 100, },
-                    className: "above",
-                    disable: ["connector"],
-                    subject: {
-                        x1: x(new Date('4/21/2005')),
-                        x2: x(new Date('8/11/2008')),
-                    },
-                    x: x(new Date('4/21/2005')),
-                    dx: -50,
-                    data: { y: 60 }
-                }
+                    {
+                        note: { label: "Above $60", wrap: 100, },
+                        className: "above",
+                        disable: ["connector"],
+                        subject: {
+                            x1: x(new Date('4/21/2005')),
+                            x2: x(new Date('8/11/2008')),
+                        },
+                        x: x(new Date('4/21/2005')),
+                        dx: -50,
+                        data: { y: 60 }
+                    }
 
                 ]
 
@@ -367,7 +418,8 @@
 
                 d3.select("svg").remove();
                 initialGraph(d, 3);
-
+                document.getElementById('annote').style = "margin: 0.67em 0;display:none;";
+                document.getElementById('annote2').style = "margin: 0.67em 0;";
                 document.getElementById('3').className = "page-item active";
                 document.getElementById('2').className = "page-item ";
                 document.getElementById('1').className = "page-item ";
@@ -380,8 +432,11 @@
                     + " than before that Russia–Saudi Arabia oil price war and coronavirus together caused the stock price back to 1990s level." +
                     " It seems that it wont back to $30 this year because the oil war still not end and BP also decided to layoff 10,000 empolee to overcome this difficulties.";
 
-                /* Code below relevant for annotations */
-                const annotations = [{
+
+                document.getElementById("5").addEventListener("click", function () {
+
+
+                    const annotations = [{
                     note: { label: "Financial crisis" },
                     subject: {
                         y1: margin.top,
@@ -398,16 +453,8 @@
                     },
                     y: margin.top,
                     data: { x: "4/20/2010" }
-                },
+                }, 
                 {
-                    note: { label: "Deepwater Horizon oil spill" },
-                    subject: {
-                        y1: margin.top,
-                        y2: height - margin.bottom
-                    },
-                    y: margin.top,
-                    data: { x: "4/20/2010" }
-                }, {
                     note: { label: "Start to sell some business" },
                     subject: {
                         y1: margin.top,
@@ -424,7 +471,41 @@
                     },
                     y: margin.top,
                     data: { x: "3/8/2020" }
-                },
+                }
+
+                ]
+
+                    const type = d3.annotationCustomType(
+                        d3.annotationXYThreshold,
+                        {
+                            "note": {
+                                "lineType": "none",
+                                "orientation": "top",
+                                "align": "middle"
+                            }
+                        }
+                    )
+
+                    const makeAnnotations = d3.annotation()
+                        .type(type)
+                        //Gives you access to any data objects in the annotations array
+                        .accessors({
+                            x: function (d) { return x(new Date(d.x)) },
+                            y: function (d) { return y(d.y) }
+                        })
+                        .annotations(annotations)
+                        .textWrap(30)
+
+                    d3.select("svg")
+                        .append("g")
+                        .attr("class", "annotation-group")
+                        .call(makeAnnotations)
+
+
+
+                });
+                /* Code below relevant for annotations */
+                const annotations = [
                 {
                     note: {
                         label: "Lowest here: $34.54",
@@ -498,6 +579,8 @@
                 initialGraph(d, 1);
                 d3.selectAll(".lineChart").style("opacity", "0");
                 animatelines(0);
+                document.getElementById('annote').style = "margin: 0.67em 0;display:none;";
+                document.getElementById('annote2').style = "margin: 0.67em 0;display:none;";
                 document.getElementById('3').className = "page-item ";
                 document.getElementById('2').className = "page-item ";
                 document.getElementById('1').className = "page-item active";
