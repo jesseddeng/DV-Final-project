@@ -132,7 +132,7 @@
         <div style="margin: 0.67em 0;display:none;" id="annote"><button type="button" class="btn btn-outline-success"
                 id="4">Show Events</button></div>
         <div style="margin: 0.67em 0;display:none;" id="annote2"><button type="button" class="btn btn-outline-success"
-                    id="5">Show Events</button></div>
+                id="5">Show Events</button></div>
         <h2 id="text">Price Trending</h2>
         <p id="p">This animation shows the trending of BP stocks in these 30 years. It shows that BP's stock seems has a
             very changing curve.
@@ -300,58 +300,64 @@
                     "the first section is around 1999. In 1999, Bp and Amoco complete their $53 billion merger which cause the stock price up to $50 at the first time. " +
                     "In 2003, the energy crisis also caused BP stock price higher than before, aboving $60 which nerver showing again in the future. After the Financial crisis of 2007–2008, the BP stock price" +
                     " back to $50 agian. ";
-
+                    var sta = 1;
                 document.getElementById("4").addEventListener("click", function () {
-
-
-                    /* Code below relevant for annotations */
-                    const annotations = [{
-                        note: { label: "BP and Amoco Merge", wrap: 100 },
-                        subject: {
-                            y1: margin.top,
-                            y2: height - margin.bottom
+                    
+                    if (sta == 1) {/* Code below relevant for annotations */
+                        const annotations = [{
+                            note: { label: "BP and Amoco Merge", wrap: 100 },
+                            subject: {
+                                y1: margin.top,
+                                y2: height - margin.bottom
+                            },
+                            y: margin.top,
+                            data: { x: "1/1/1999" } //position the x based on an x scale
                         },
-                        y: margin.top,
-                        data: { x: "1/1/1999" } //position the x based on an x scale
-                    },
 
-                    {
-                        note: { label: "2003 energy crisis" },
-                        subject: {
-                            y1: margin.top,
-                            y2: height - margin.bottom
-                        },
-                        y: margin.top,
-                        data: { x: "1/1/2003" }
+                        {
+                            note: { label: "2003 energy crisis" },
+                            subject: {
+                                y1: margin.top,
+                                y2: height - margin.bottom
+                            },
+                            y: margin.top,
+                            data: { x: "1/1/2003" }
+                        }
+
+                        ]
+
+                        const type = d3.annotationCustomType(
+                            d3.annotationXYThreshold,
+                            {
+                                "note": {
+                                    "lineType": "none",
+                                    "orientation": "top",
+                                    "align": "middle"
+                                }
+                            }
+                        )
+
+                        const makeAnnotations = d3.annotation()
+                            .type(type)
+                            //Gives you access to any data objects in the annotations array
+                            .accessors({
+                                x: function (d) { return x(new Date(d.x)) },
+                                y: function (d) { return y(d.y) }
+                            })
+                            .annotations(annotations)
+                            .textWrap(30)
+
+                        d3.select("svg")
+                            .append("g")
+                            .attr("class", "annotation-group")
+                            .call(makeAnnotations)
+                        sta = 2
+                    }
+                    else {
+                        document.getElementById("2-1").click();
+                        sta = 1;
                     }
 
-                    ]
-
-                    const type = d3.annotationCustomType(
-                        d3.annotationXYThreshold,
-                        {
-                            "note": {
-                                "lineType": "none",
-                                "orientation": "top",
-                                "align": "middle"
-                            }
-                        }
-                    )
-
-                    const makeAnnotations = d3.annotation()
-                        .type(type)
-                        //Gives you access to any data objects in the annotations array
-                        .accessors({
-                            x: function (d) { return x(new Date(d.x)) },
-                            y: function (d) { return y(d.y) }
-                        })
-                        .annotations(annotations)
-                        .textWrap(30)
-
-                    d3.select("svg")
-                        .append("g")
-                        .attr("class", "annotation-group")
-                        .call(makeAnnotations)
 
 
 
@@ -415,7 +421,7 @@
 
             });
             document.getElementById("3-1").addEventListener("click", function () {
-
+                var sta = 1;
                 d3.select("svg").remove();
                 initialGraph(d, 3);
                 document.getElementById('annote').style = "margin: 0.67em 0;display:none;";
@@ -436,113 +442,122 @@
                 document.getElementById("5").addEventListener("click", function () {
 
 
-                    const annotations = [{
-                    note: { label: "Financial crisis" },
-                    subject: {
-                        y1: margin.top,
-                        y2: height - margin.bottom
-                    },
-                    y: margin.top,
-                    data: { x: "8/9/2007" } //position the x based on an x scale
-                },
-                {
-                    note: { label: "Deepwater Horizon oil spill" },
-                    subject: {
-                        y1: margin.top,
-                        y2: height - margin.bottom
-                    },
-                    y: margin.top,
-                    data: { x: "4/20/2010" }
-                }, 
-                {
-                    note: { label: "Start to sell some business" },
-                    subject: {
-                        y1: margin.top,
-                        y2: height - margin.bottom
-                    },
-                    y: margin.top,
-                    data: { x: "1/1/2015" }
-                },
-                {
-                    note: { label: "Russia–Saudi Arabia oil price war" },
-                    subject: {
-                        y1: margin.top,
-                        y2: height - margin.bottom
-                    },
-                    y: margin.top,
-                    data: { x: "3/8/2020" }
-                }
-
-                ]
-
-                    const type = d3.annotationCustomType(
-                        d3.annotationXYThreshold,
+                    if (sta == 1) {
+                        const annotations = [{
+                            note: { label: "Financial crisis" },
+                            subject: {
+                                y1: margin.top,
+                                y2: height - margin.bottom
+                            },
+                            y: margin.top,
+                            data: { x: "8/9/2007" } //position the x based on an x scale
+                        },
                         {
-                            "note": {
-                                "lineType": "none",
-                                "orientation": "top",
-                                "align": "middle"
-                            }
+                            note: { label: "Deepwater Horizon oil spill" },
+                            subject: {
+                                y1: margin.top,
+                                y2: height - margin.bottom
+                            },
+                            y: margin.top,
+                            data: { x: "4/20/2010" }
+                        },
+                        {
+                            note: { label: "Start to sell some business" },
+                            subject: {
+                                y1: margin.top,
+                                y2: height - margin.bottom
+                            },
+                            y: margin.top,
+                            data: { x: "1/1/2015" }
+                        },
+                        {
+                            note: { label: "Russia–Saudi Arabia oil price war" },
+                            subject: {
+                                y1: margin.top,
+                                y2: height - margin.bottom
+                            },
+                            y: margin.top,
+                            data: { x: "3/8/2020" }
                         }
-                    )
 
-                    const makeAnnotations = d3.annotation()
-                        .type(type)
-                        //Gives you access to any data objects in the annotations array
-                        .accessors({
-                            x: function (d) { return x(new Date(d.x)) },
-                            y: function (d) { return y(d.y) }
-                        })
-                        .annotations(annotations)
-                        .textWrap(30)
+                        ]
 
-                    d3.select("svg")
-                        .append("g")
-                        .attr("class", "annotation-group")
-                        .call(makeAnnotations)
+                        const type = d3.annotationCustomType(
+                            d3.annotationXYThreshold,
+                            {
+                                "note": {
+                                    "lineType": "none",
+                                    "orientation": "top",
+                                    "align": "middle"
+                                }
+                            }
+                        )
+
+                        const makeAnnotations = d3.annotation()
+                            .type(type)
+                            //Gives you access to any data objects in the annotations array
+                            .accessors({
+                                x: function (d) { return x(new Date(d.x)) },
+                                y: function (d) { return y(d.y) }
+                            })
+                            .annotations(annotations)
+                            .textWrap(30)
+
+                        d3.select("svg")
+                            .append("g")
+                            .attr("class", "annotation-group")
+                            .call(makeAnnotations)
+                        sta = 2;
+                    }
+                    else {
+                        document.getElementById("3-1").click();
+                        sta = 1;
+                    }
+
+
 
 
 
                 });
                 /* Code below relevant for annotations */
                 const annotations = [
-                {
-                    note: {
-                        label: "Lowest here: $34.54",
-                        lineType: "none",
-                        orientation: "leftRight",
-                        "align": "middle"
-                    },
-                    className: "anomaly",
-                    type: d3.annotationCalloutCircle,
-                    subject: { radius: 15 },
-                    data: { x: "3/5/2009", y: 34.54 },
-                    dx: -53
-                }, {
-                    note: {
-                        label: "Lowest here: $27.05",
-                        lineType: "none",
-                        orientation: "leftRight",
-                        "align": "middle"
-                    },
-                    className: "anomaly",
-                    type: d3.annotationCalloutCircle,
-                    subject: { radius: 15 },
-                    data: { x: "6/28/2010", y: 27.05 },
-                    dx: 53
-                }, {
-                    note: {
-                        label: "Lowest here: $16.11",
-                        lineType: "none",
-                        orientation: "leftRight",
-                        "align": "middle"
-                    },
-                    className: "anomaly",
-                    type: d3.annotationCalloutCircle,
-                    subject: { radius: 15 },
-                    data: { x: "3/18/2020", y: 16.11 },
-                    dx: -53
-                }
+                    {
+                        note: {
+                            label: "Lowest here: $34.54",
+                            lineType: "none",
+                            orientation: "leftRight",
+                            "align": "middle"
+                        },
+                        className: "anomaly",
+                        type: d3.annotationCalloutCircle,
+                        subject: { radius: 15 },
+                        data: { x: "3/5/2009", y: 34.54 },
+                        dx: -53
+                    }, {
+                        note: {
+                            label: "Lowest here: $27.05",
+                            lineType: "none",
+                            orientation: "leftRight",
+                            "align": "middle"
+                        },
+                        className: "anomaly",
+                        type: d3.annotationCalloutCircle,
+                        subject: { radius: 15 },
+                        data: { x: "6/28/2010", y: 27.05 },
+                        dx: 53
+                    }, {
+                        note: {
+                            label: "Lowest here: $16.11",
+                            lineType: "none",
+                            orientation: "leftRight",
+                            "align": "middle"
+                        },
+                        className: "anomaly",
+                        type: d3.annotationCalloutCircle,
+                        subject: { radius: 15 },
+                        data: { x: "3/18/2020", y: 16.11 },
+                        dx: -53
+                    }
 
                 ]
 
