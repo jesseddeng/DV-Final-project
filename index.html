@@ -187,7 +187,21 @@
                             d3.select(this)
                                 .style(k, styles[k])
                         }, this)
-                    }  );
+                    }
+
+
+
+                    )
+
+                svg.append('g')
+                    .attr('class', 'line')
+
+                svg.append('g')
+                    .attr('class', 'line2')
+
+
+
+
 
                 const yAxis = d3.axisLeft(y).ticks(3).tickFormat(function (d) { return "$" + d })
                 const xAxis = d3.axisBottom(x)
@@ -246,7 +260,7 @@
                     focus.select('text').text(formatCurrency(d.Close));
                     // console.log(i)
                 }
-
+                
 
 
             };
