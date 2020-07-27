@@ -12,11 +12,7 @@
 
         :root {
             --line-chart-color: #89a6b4;
-            --annotation-context-color2: #35f164e5;
-            --annotation-context-color3: #ff2f2f;
-            --annotation-context-color: #eeff00;
-            --annotation-above-color: #00BFA5;
-            --annotation-anomaly-color: #E8336D;
+
         }
 
         svg {
@@ -36,49 +32,6 @@
 
         path {
             fill: none;
-        }
-
-
-
-        .annotation:not(.above):not(.anomaly) path {
-            stroke-dasharray: 1, 3;
-        }
-
-        .annotation text {
-            fill: var(--annotation-context-color);
-        }
-
-        .annotation.second text {
-            fill: var(--annotation-context-color2);
-        }
-
-        .annotation.third text {
-            fill: var(--annotation-context-color3);
-        }
-
-        .annotation.above path {
-            stroke: var(--annotation-above-color);
-        }
-
-        .annotation.above text {
-            fill: var(--annotation-above-color);
-        }
-
-        .annotation.anomaly path {
-            stroke: var(--annotation-anomaly-color);
-            stroke-width: 2px;
-        }
-
-        .annotation.anomaly text {
-            fill: var(--annotation-anomaly-color);
-        }
-
-        .annotation-note-bg {
-            fill: rgba(0, 0, 0, 0);
-        }
-
-        .annotation-note-title {
-            font-weight: bold;
         }
 
         text.title {
@@ -121,11 +74,7 @@
             </ul>
 
 
-
-
-
         </nav>
-
 
 
         <div id="graph" class="d-flex flex-column"></div>
@@ -143,7 +92,6 @@
     </div>
 
     <script src="https://d3js.org/d3.v4.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-annotation/1.12.1/d3-annotation.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.0.4/popper.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
@@ -211,8 +159,6 @@
 
                 svg.append('g')
                     .attr('class', 'line2')
-
-
 
 
 
@@ -304,112 +250,93 @@
                     " back to $50 agian. ";
 
 
-                /* Code below relevant for annotations */
-                const annotations = [
-                    {
-                        note: { label: "Above $50", wrap: 100, },
-                        className: "above",
-                        disable: ["connector"],
-                        subject: {
-                            x1: x(new Date('5/7/1999')),
-                            x2: x(new Date('8/12/2002'))
-                        },
-                        x: x(new Date('5/7/1999')),
-                        dx: -50,
-                        data: { y: 50 }
-                    },
 
-                    {
-                        note: { label: "Above $60", wrap: 100, },
-                        className: "above",
-                        disable: ["connector"],
-                        subject: {
-                            x1: x(new Date('4/21/2005')),
-                            x2: x(new Date('8/11/2008')),
-                        },
-                        x: x(new Date('4/21/2005')),
-                        dx: -50,
-                        data: { y: 60 }
-                    }
 
-                ]
+                d3.select("svg").append('g').attr('class', 'an1')
+                d3.select("svg").append('g').attr('class', 'an1-t')
 
-                const type = d3.annotationCustomType(
-                    d3.annotationXYThreshold,
-                    {
-                        "note": {
-                            "lineType": "none",
-                            "orientation": "top",
-                            "align": "middle"
-                        }
-                    }
-                )
+                d3.select("g.an1")
+                    .append("line")
+                    .attr("x1", x(new Date('5/7/1999')))
+                    .attr("y1", y(50))
+                    .attr("x2", x(new Date('8/12/2002')))
+                    .attr("y2", y(50))
+                    .attr("style", "stroke:#00BFA5;stroke-width:1;'")
 
-                const makeAnnotations = d3.annotation()
-                    .type(type)
-                    //Gives you access to any data objects in the annotations array
-                    .accessors({
-                        x: function (d) { return x(new Date(d.x)) },
-                        y: function (d) { return y(d.y) }
-                    })
-                    .annotations(annotations)
-                    .textWrap(30)
 
-                d3.select("svg")
-                    .append("g")
-                    .attr("class", "annotation-group")
-                    .call(makeAnnotations)
+                d3.select("g.an1-t")
+                    .append("text")
+                    .attr("x", x(new Date('5/7/1999')) - 80)
+                    .attr("y", y(50))
+                    .text("Above $50")
+                    .attr("fill", "#00BFA5");
+
+                d3.select("svg").append('g').attr('class', 'an2')
+                d3.select("svg").append('g').attr('class', 'an2-t')
+
+                d3.select("g.an2")
+                    .append("line")
+                    .attr("x1", x(new Date('4/21/2005')))
+                    .attr("y1", y(60))
+                    .attr("x2", x(new Date('8/11/2008')))
+                    .attr("y2", y(60))
+                    .attr("style", "stroke:#00BFA5;stroke-width:1;'");
+
+
+                d3.select("g.an2-t")
+                    .append("text")
+                    .attr("x", x(new Date('4/21/2005')) - 90)
+                    .attr("y", y(60))
+                    .text("Above $60")
+                    .attr("fill", "#00BFA5");
+
+
 
                 document.getElementById("4").addEventListener("click", function () {
 
-                    if (sta == 1) {/* Code below relevant for annotations */
-                        const annotations = [{
-                            note: { label: "BP and Amoco Merge", wrap: 100 },
-                            subject: {
-                                y1: margin.top,
-                                y2: height - margin.bottom
-                            },
-                            y: margin.top,
-                            data: { x: "1/1/1999" } //position the x based on an x scale
-                        },
+                    if (sta == 1) {
 
-                        {
-                            note: { label: "2003 energy crisis" },
-                            subject: {
-                                y1: margin.top,
-                                y2: height - margin.bottom
-                            },
-                            y: margin.top,
-                            data: { x: "1/1/2003" }
-                        }
+                        d3.select("svg").append('g').attr('class', 'eve1')
+                        d3.select("svg").append('g').attr('class', 'eve1-t')
 
-                        ]
+                        d3.select("g.eve1")
+                            .append("line")
+                            .attr("x1", x(new Date('1/1/1999')))
+                            .attr("y1", y(0))
+                            .attr("x2", x(new Date('1/1/1999')))
+                            .attr("y2", y(80))
+                            .attr("style", "stroke:#eeff00;stroke-width:1;'")
+                            .attr("stroke-dasharray", 5 + " " + 5);
 
-                        const type = d3.annotationCustomType(
-                            d3.annotationXYThreshold,
-                            {
-                                "note": {
-                                    "lineType": "none",
-                                    "orientation": "top",
-                                    "align": "middle"
-                                }
-                            }
-                        )
 
-                        const makeAnnotations = d3.annotation()
-                            .type(type)
-                            //Gives you access to any data objects in the annotations array
-                            .accessors({
-                                x: function (d) { return x(new Date(d.x)) },
-                                y: function (d) { return y(d.y) }
-                            })
-                            .annotations(annotations)
-                            .textWrap(30)
+                        d3.select("g.eve1-t")
+                            .append("text")
+                            .attr("x", x(new Date('5/7/1999')) - 80)
+                            .attr("y", y(80))
+                            .text("BP and Amoco Merge")
+                            .attr("fill", "#eeff00");
 
-                        d3.select("svg")
-                            .append("g")
-                            .attr("class", "annotation-group")
-                            .call(makeAnnotations)
+                        d3.select("svg").append('g').attr('class', 'eve2')
+                        d3.select("svg").append('g').attr('class', 'eve2-t')
+
+                        d3.select("g.eve2")
+                            .append("line")
+                            .attr("x1", x(new Date('1/1/2003')))
+                            .attr("y1", y(0))
+                            .attr("x2", x(new Date('1/1/2003')))
+                            .attr("y2", y(85))
+                            .attr("style", "stroke:#eeff00;stroke-width:1;'")
+                            .attr("stroke-dasharray", 5 + " " + 5);
+
+
+                        d3.select("g.eve2-t")
+                            .append("text")
+                            .attr("x", x(new Date('1/1/2003')) - 50)
+                            .attr("y", y(85))
+                            .text("2003 Energy Crisis")
+                            .attr("fill", "#eeff00");
+
+
                         sta = 2
                         document.getElementById("4").innerText = "Hide Events";
 
@@ -418,61 +345,46 @@
 
                         d3.select("svg").remove();
                         initialGraph(d, 2);
-                        /* Code below relevant for annotations */
-                        const annotations = [
-                            {
-                                note: { label: "Above $50", wrap: 100, },
-                                className: "above",
-                                disable: ["connector"],
-                                subject: {
-                                    x1: x(new Date('5/7/1999')),
-                                    x2: x(new Date('8/12/2002'))
-                                },
-                                x: x(new Date('5/7/1999')),
-                                dx: -50,
-                                data: { y: 50 }
-                            },
 
-                            {
-                                note: { label: "Above $60", wrap: 100, },
-                                className: "above",
-                                disable: ["connector"],
-                                subject: {
-                                    x1: x(new Date('4/21/2005')),
-                                    x2: x(new Date('8/11/2008')),
-                                },
-                                x: x(new Date('4/21/2005')),
-                                dx: -50,
-                                data: { y: 60 }
-                            }
+                        d3.select("svg").append('g').attr('class', 'an1')
+                        d3.select("svg").append('g').attr('class', 'an1-t')
 
-                        ]
+                        d3.select("g.an1")
+                            .append("line")
+                            .attr("x1", x(new Date('5/7/1999')))
+                            .attr("y1", y(50))
+                            .attr("x2", x(new Date('8/12/2002')))
+                            .attr("y2", y(50))
+                            .attr("style", "stroke:#00BFA5;stroke-width:1;'")
 
-                        const type = d3.annotationCustomType(
-                            d3.annotationXYThreshold,
-                            {
-                                "note": {
-                                    "lineType": "none",
-                                    "orientation": "top",
-                                    "align": "middle"
-                                }
-                            }
-                        )
 
-                        const makeAnnotations = d3.annotation()
-                            .type(type)
-                            //Gives you access to any data objects in the annotations array
-                            .accessors({
-                                x: function (d) { return x(new Date(d.x)) },
-                                y: function (d) { return y(d.y) }
-                            })
-                            .annotations(annotations)
-                            .textWrap(30)
+                        d3.select("g.an1-t")
+                            .append("text")
+                            .attr("x", x(new Date('5/7/1999')) - 80)
+                            .attr("y", y(50))
+                            .text("Above $50")
+                            .attr("fill", "#00BFA5");
 
-                        d3.select("svg")
-                            .append("g")
-                            .attr("class", "annotation-group")
-                            .call(makeAnnotations)
+                        d3.select("svg").append('g').attr('class', 'an2')
+                        d3.select("svg").append('g').attr('class', 'an2-t')
+
+                        d3.select("g.an2")
+                            .append("line")
+                            .attr("x1", x(new Date('4/21/2005')))
+                            .attr("y1", y(60))
+                            .attr("x2", x(new Date('8/11/2008')))
+                            .attr("y2", y(60))
+                            .attr("style", "stroke:#00BFA5;stroke-width:1;'")
+
+
+                        d3.select("g.an2-t")
+                            .append("text")
+                            .attr("x", x(new Date('4/21/2005')) - 90)
+                            .attr("y", y(60))
+                            .text("Above $60")
+                            .attr("fill", "#00BFA5");
+
+
                         document.getElementById("4").innerText = "Show Events";
                         sta = 1;
 
@@ -506,224 +418,349 @@
                     " It seems that it wont back to $30 this year because the oil war still not end and BP also decided to layoff 10,000 empolee to overcome this difficulties.";
 
 
+                d3.select("svg").append('g').attr('class', 'an1')
+                d3.select("svg").append('g').attr('class', 'an1-line')
+                d3.select("svg").append('g').attr('class', 'an1-t')
+
+                d3.select("g.an1")
+                    .append("circle")
+                    .attr("cx", x(new Date('3/5/2009')))
+                    .attr("cy", y(34.54))
+                    .attr("r", 15)
+                    .attr("stroke", "#E8336D")
+                    .attr("fill", "none")
+                    .attr("stroke-width", "2");
+
+                d3.select("g.an1-line")
+                    .append("line")
+                    .attr("x1", x(new Date('3/5/2009')) - 45)
+                    .attr("y1", y(34.54))
+                    .attr("x2", x(new Date('3/5/2009')) - 15)
+                    .attr("y2", y(34.54))
+                    .attr("style", "stroke:#E8336D;stroke-width:2;'");
+
+                d3.select("g.an1-t")
+                    .append("text")
+                    .append('tspan')
+                    .text("Lowest")
+                    .attr("x", x(new Date('3/5/2009')) - 100)
+                    .attr("y", y(34.54))
+                    .attr("fill", "#E8336D")
+                    .append('tspan')
+                    .text("here:")
+                    .attr("x", x(new Date('3/5/2009')) - 100)
+                    .attr("y", y(30.54))
+                    .attr("fill", "#E8336D")
+                    .append('tspan')
+                    .text("$34.54")
+                    .attr("x", x(new Date('3/5/2009')) - 100)
+                    .attr("y", y(26.54))
+                    .attr("fill", "#E8336D");
+
+                d3.select("svg").append('g').attr('class', 'an2')
+                d3.select("svg").append('g').attr('class', 'an2-line')
+                d3.select("svg").append('g').attr('class', 'an2-t')
+
+                d3.select("g.an2")
+                    .append("circle")
+                    .attr("cx", x(new Date('6/28/2010')))
+                    .attr("cy", y(27.05))
+                    .attr("r", 15)
+                    .attr("stroke", "#E8336D")
+                    .attr("fill", "none")
+                    .attr("stroke-width", "2");
+
+                d3.select("g.an2-line")
+                    .append("line")
+                    .attr("x1", x(new Date('6/28/2010')) + 15)
+                    .attr("y1", y(27.05))
+                    .attr("x2", x(new Date('6/28/2010')) + 45)
+                    .attr("y2", y(27.05))
+                    .attr("style", "stroke:#E8336D;stroke-width:2;'");
+
+                d3.select("g.an2-t")
+                    .append("text")
+                    .append('tspan')
+                    .text("Lowest")
+                    .attr("x", x(new Date('6/28/2010')) + 50)
+                    .attr("y", y(27.05))
+                    .attr("fill", "#E8336D")
+                    .append('tspan')
+                    .text("here:")
+                    .attr("x", x(new Date('6/28/2010')) + 50)
+                    .attr("y", y(23.05))
+                    .attr("fill", "#E8336D")
+                    .append('tspan')
+                    .text("$27.05")
+                    .attr("x", x(new Date('6/28/2010')) + 50)
+                    .attr("y", y(19.05))
+                    .attr("fill", "#E8336D");
+
+                d3.select("svg").append('g').attr('class', 'an3')
+                d3.select("svg").append('g').attr('class', 'an3-line')
+                d3.select("svg").append('g').attr('class', 'an3-t')
+
+                d3.select("g.an3")
+                    .append("circle")
+                    .attr("cx", x(new Date('3/18/2020')))
+                    .attr("cy", y(16.11))
+                    .attr("r", 15)
+                    .attr("stroke", "#E8336D")
+                    .attr("fill", "none")
+                    .attr("stroke-width", "2");
+
+                d3.select("g.an3-line")
+                    .append("line")
+                    .attr("x1", x(new Date('3/18/2020')) - 45)
+                    .attr("y1", y(16.11))
+                    .attr("x2", x(new Date('3/18/2020')) - 15)
+                    .attr("y2", y(16.11))
+                    .attr("style", "stroke:#E8336D;stroke-width:2;'");
+
+                d3.select("g.an3-t")
+                    .append("text")
+                    .append('tspan')
+                    .text("Lowest")
+                    .attr("x", x(new Date('3/18/2020')) - 100)
+                    .attr("y", y(16.11))
+                    .attr("fill", "#E8336D")
+                    .append('tspan')
+                    .text("here:")
+                    .attr("x", x(new Date('3/18/2020')) - 100)
+                    .attr("y", y(12.11))
+                    .attr("fill", "#E8336D")
+                    .append('tspan')
+                    .text("$16.11")
+                    .attr("x", x(new Date('3/18/2020')) - 100)
+                    .attr("y", y(8.11))
+                    .attr("fill", "#E8336D");
+
+
+
+
+
+
+
                 document.getElementById("5").addEventListener("click", function () {
 
-
                     if (action == 1) {
-                        const annotations = [{
-                            note: { label: "Financial crisis" },
-                            subject: {
-                                y1: margin.top,
-                                y2: height - margin.bottom
-                            },
-                            y: margin.top,
-                            data: { x: "8/9/2007" } //position the x based on an x scale
-                        },
-                        {
-                            note: { label: "Deepwater Horizon oil spill" },
-                            subject: {
-                                y1: margin.top,
-                                y2: height - margin.bottom
-                            },
-                            y: margin.top,
-                            data: { x: "4/20/2010" }
-                        },
-                        {
-                            note: { label: "Start to sell some business" },
-                            subject: {
-                                y1: margin.top,
-                                y2: height - margin.bottom
-                            },
-                            y: margin.top,
-                            data: { x: "1/1/2015" }
-                        },
-                        {
-                            note: { label: "Russia–Saudi Arabia oil price war" },
-                            subject: {
-                                y1: margin.top,
-                                y2: height - margin.bottom
-                            },
-                            y: margin.top,
-                            data: { x: "3/8/2020" }
-                        }
 
-                        ]
+                        d3.select("svg").append('g').attr('class', 'eve1')
+                        d3.select("svg").append('g').attr('class', 'eve1-t')
 
-                        const type = d3.annotationCustomType(
-                            d3.annotationXYThreshold,
-                            {
-                                "note": {
-                                    "lineType": "none",
-                                    "orientation": "top",
-                                    "align": "middle"
-                                }
-                            }
-                        )
+                        d3.select("g.eve1")
+                            .append("line")
+                            .attr("x1", x(new Date('8/9/2007')))
+                            .attr("y1", y(0))
+                            .attr("x2", x(new Date('8/9/2007')))
+                            .attr("y2", y(85))
+                            .attr("style", "stroke:#eeff00;stroke-width:1;'")
+                            .attr("stroke-dasharray", 5 + " " + 5);
 
-                        const makeAnnotations = d3.annotation()
-                            .type(type)
-                            //Gives you access to any data objects in the annotations array
-                            .accessors({
-                                x: function (d) { return x(new Date(d.x)) },
-                                y: function (d) { return y(d.y) }
-                            })
-                            .annotations(annotations)
-                            .textWrap(30)
 
-                        d3.select("svg")
-                            .append("g")
-                            .attr("class", "annotation-group")
-                            .call(makeAnnotations)
+                        d3.select("g.eve1-t")
+                            .append("text")
+                            .attr("x", x(new Date('8/9/2007')) - 50)
+                            .attr("y", y(85))
+                            .text("Financial crisis")
+                            .attr("fill", "#eeff00");
+
+                        d3.select("svg").append('g').attr('class', 'eve2')
+                        d3.select("svg").append('g').attr('class', 'eve2-t')
+
+                        d3.select("g.eve2")
+                            .append("line")
+                            .attr("x1", x(new Date('4/20/2010')))
+                            .attr("y1", y(0))
+                            .attr("x2", x(new Date('4/20/2010')))
+                            .attr("y2", y(95))
+                            .attr("style", "stroke:#eeff00;stroke-width:1;'")
+                            .attr("stroke-dasharray", 5 + " " + 5);
+
+
+                        d3.select("g.eve2-t")
+                            .append("text")
+                            .attr("x", x(new Date('4/20/2010')) - 90)
+                            .attr("y", y(95))
+                            .text("Deepwater Horizon oil spill")
+                            .attr("fill", "#eeff00");
+
+                        d3.select("svg").append('g').attr('class', 'eve3')
+                        d3.select("svg").append('g').attr('class', 'eve3-t')
+
+                        d3.select("g.eve3")
+                            .append("line")
+                            .attr("x1", x(new Date('1/1/2015')))
+                            .attr("y1", y(0))
+                            .attr("x2", x(new Date('1/1/2015')))
+                            .attr("y2", y(105))
+                            .attr("style", "stroke:#eeff00;stroke-width:1;'")
+                            .attr("stroke-dasharray", 5 + " " + 5);
+
+
+                        d3.select("g.eve3-t")
+                            .append("text")
+                            .attr("x", x(new Date('1/1/2015')) - 90)
+                            .attr("y", y(105))
+                            .text("Start to sell some business")
+                            .attr("fill", "#eeff00");
+
+                        d3.select("svg").append('g').attr('class', 'eve4')
+                        d3.select("svg").append('g').attr('class', 'eve4-t')
+
+                        d3.select("g.eve4")
+                            .append("line")
+                            .attr("x1", x(new Date('3/8/2020')))
+                            .attr("y1", y(0))
+                            .attr("x2", x(new Date('3/8/2020')))
+                            .attr("y2", y(85))
+                            .attr("style", "stroke:#eeff00;stroke-width:1;'")
+                            .attr("stroke-dasharray", 5 + " " + 5);
+
+
+                        d3.select("g.eve4-t")
+                            .append("text")
+                            .append('tspan')
+                            .text("Russia–Saudi ")
+                            .attr("x", x(new Date('3/8/2020')) - 80)
+                            .attr("y", y(90))
+                            .attr("fill", "#eeff00")
+                            .append('tspan')
+                            .text("Arabia oil price war")
+                            .attr("x", x(new Date('3/8/2020')) - 80)
+                            .attr("y", y(86))
+                            .attr("fill", "#eeff00")
+
+
                         action = 2;
                         document.getElementById("5").innerText = "Hide Events";
                     }
                     else {
                         d3.select("svg").remove();
                         initialGraph(d, 3);
-                        /* Code below relevant for annotations */
-                        const annotations = [
-                            {
-                                note: {
-                                    label: "Lowest here: $34.54",
-                                    lineType: "none",
-                                    orientation: "leftRight",
-                                    "align": "middle"
-                                },
-                                className: "anomaly",
-                                type: d3.annotationCalloutCircle,
-                                subject: { radius: 15 },
-                                data: { x: "3/5/2009", y: 34.54 },
-                                dx: -53
-                            }, {
-                                note: {
-                                    label: "Lowest here: $27.05",
-                                    lineType: "none",
-                                    orientation: "leftRight",
-                                    "align": "middle"
-                                },
-                                className: "anomaly",
-                                type: d3.annotationCalloutCircle,
-                                subject: { radius: 15 },
-                                data: { x: "6/28/2010", y: 27.05 },
-                                dx: 53
-                            }, {
-                                note: {
-                                    label: "Lowest here: $16.11",
-                                    lineType: "none",
-                                    orientation: "leftRight",
-                                    "align": "middle"
-                                },
-                                className: "anomaly",
-                                type: d3.annotationCalloutCircle,
-                                subject: { radius: 15 },
-                                data: { x: "3/18/2020", y: 16.11 },
-                                dx: -53
-                            }
+                        d3.select("svg").append('g').attr('class', 'an1')
+                        d3.select("svg").append('g').attr('class', 'an1-line')
+                        d3.select("svg").append('g').attr('class', 'an1-t')
 
-                        ]
+                        d3.select("g.an1")
+                            .append("circle")
+                            .attr("cx", x(new Date('3/5/2009')))
+                            .attr("cy", y(34.54))
+                            .attr("r", 15)
+                            .attr("stroke", "#E8336D")
+                            .attr("fill", "none")
+                            .attr("stroke-width", "2");
 
-                        const type = d3.annotationCustomType(
-                            d3.annotationXYThreshold,
-                            {
-                                "note": {
-                                    "lineType": "none",
-                                    "orientation": "top",
-                                    "align": "middle"
-                                }
-                            }
-                        )
+                        d3.select("g.an1-line")
+                            .append("line")
+                            .attr("x1", x(new Date('3/5/2009')) - 45)
+                            .attr("y1", y(34.54))
+                            .attr("x2", x(new Date('3/5/2009')) - 15)
+                            .attr("y2", y(34.54))
+                            .attr("style", "stroke:#E8336D;stroke-width:2;'");
 
-                        const makeAnnotations = d3.annotation()
-                            .type(type)
-                            //Gives you access to any data objects in the annotations array
-                            .accessors({
-                                x: function (d) { return x(new Date(d.x)) },
-                                y: function (d) { return y(d.y) }
-                            })
-                            .annotations(annotations)
-                            .textWrap(30)
+                        d3.select("g.an1-t")
+                            .append("text")
+                            .append('tspan')
+                            .text("Lowest")
+                            .attr("x", x(new Date('3/5/2009')) - 100)
+                            .attr("y", y(34.54))
+                            .attr("fill", "#E8336D")
+                            .append('tspan')
+                            .text("here:")
+                            .attr("x", x(new Date('3/5/2009')) - 100)
+                            .attr("y", y(30.54))
+                            .attr("fill", "#E8336D")
+                            .append('tspan')
+                            .text("$34.54")
+                            .attr("x", x(new Date('3/5/2009')) - 100)
+                            .attr("y", y(26.54))
+                            .attr("fill", "#E8336D");
 
-                        d3.select("svg")
-                            .append("g")
-                            .attr("class", "annotation-group")
-                            .call(makeAnnotations)
+                        d3.select("svg").append('g').attr('class', 'an2')
+                        d3.select("svg").append('g').attr('class', 'an2-line')
+                        d3.select("svg").append('g').attr('class', 'an2-t')
+
+                        d3.select("g.an2")
+                            .append("circle")
+                            .attr("cx", x(new Date('6/28/2010')))
+                            .attr("cy", y(27.05))
+                            .attr("r", 15)
+                            .attr("stroke", "#E8336D")
+                            .attr("fill", "none")
+                            .attr("stroke-width", "2");
+
+                        d3.select("g.an2-line")
+                            .append("line")
+                            .attr("x1", x(new Date('6/28/2010')) + 15)
+                            .attr("y1", y(27.05))
+                            .attr("x2", x(new Date('6/28/2010')) + 45)
+                            .attr("y2", y(27.05))
+                            .attr("style", "stroke:#E8336D;stroke-width:2;'");
+
+                        d3.select("g.an2-t")
+                            .append("text")
+                            .append('tspan')
+                            .text("Lowest")
+                            .attr("x", x(new Date('6/28/2010')) + 50)
+                            .attr("y", y(27.05))
+                            .attr("fill", "#E8336D")
+                            .append('tspan')
+                            .text("here:")
+                            .attr("x", x(new Date('6/28/2010')) + 50)
+                            .attr("y", y(23.05))
+                            .attr("fill", "#E8336D")
+                            .append('tspan')
+                            .text("$27.05")
+                            .attr("x", x(new Date('6/28/2010')) + 50)
+                            .attr("y", y(19.05))
+                            .attr("fill", "#E8336D");
+
+                        d3.select("svg").append('g').attr('class', 'an3')
+                        d3.select("svg").append('g').attr('class', 'an3-line')
+                        d3.select("svg").append('g').attr('class', 'an3-t')
+
+                        d3.select("g.an3")
+                            .append("circle")
+                            .attr("cx", x(new Date('3/18/2020')))
+                            .attr("cy", y(16.11))
+                            .attr("r", 15)
+                            .attr("stroke", "#E8336D")
+                            .attr("fill", "none")
+                            .attr("stroke-width", "2");
+
+                        d3.select("g.an3-line")
+                            .append("line")
+                            .attr("x1", x(new Date('3/18/2020')) - 45)
+                            .attr("y1", y(16.11))
+                            .attr("x2", x(new Date('3/18/2020')) - 15)
+                            .attr("y2", y(16.11))
+                            .attr("style", "stroke:#E8336D;stroke-width:2;'");
+
+                        d3.select("g.an3-t")
+                            .append("text")
+                            .append('tspan')
+                            .text("Lowest")
+                            .attr("x", x(new Date('3/18/2020')) - 100)
+                            .attr("y", y(16.11))
+                            .attr("fill", "#E8336D")
+                            .append('tspan')
+                            .text("here:")
+                            .attr("x", x(new Date('3/18/2020')) - 100)
+                            .attr("y", y(12.11))
+                            .attr("fill", "#E8336D")
+                            .append('tspan')
+                            .text("$16.11")
+                            .attr("x", x(new Date('3/18/2020')) - 100)
+                            .attr("y", y(8.11))
+                            .attr("fill", "#E8336D");
                         action = 1;
                         document.getElementById("5").innerText = "Show Events";
                     }
 
                 });
-                /* Code below relevant for annotations */
-                const annotations = [
-                    {
-                        note: {
-                            label: "Lowest here: $34.54",
-                            lineType: "none",
-                            orientation: "leftRight",
-                            "align": "middle"
-                        },
-                        className: "anomaly",
-                        type: d3.annotationCalloutCircle,
-                        subject: { radius: 15 },
-                        data: { x: "3/5/2009", y: 34.54 },
-                        dx: -53
-                    }, {
-                        note: {
-                            label: "Lowest here: $27.05",
-                            lineType: "none",
-                            orientation: "leftRight",
-                            "align": "middle"
-                        },
-                        className: "anomaly",
-                        type: d3.annotationCalloutCircle,
-                        subject: { radius: 15 },
-                        data: { x: "6/28/2010", y: 27.05 },
-                        dx: 53
-                    }, {
-                        note: {
-                            label: "Lowest here: $16.11",
-                            lineType: "none",
-                            orientation: "leftRight",
-                            "align": "middle"
-                        },
-                        className: "anomaly",
-                        type: d3.annotationCalloutCircle,
-                        subject: { radius: 15 },
-                        data: { x: "3/18/2020", y: 16.11 },
-                        dx: -53
-                    }
-
-                ]
-
-                const type = d3.annotationCustomType(
-                    d3.annotationXYThreshold,
-                    {
-                        "note": {
-                            "lineType": "none",
-                            "orientation": "top",
-                            "align": "middle"
-                        }
-                    }
-                )
-
-                const makeAnnotations = d3.annotation()
-                    .type(type)
-                    //Gives you access to any data objects in the annotations array
-                    .accessors({
-                        x: function (d) { return x(new Date(d.x)) },
-                        y: function (d) { return y(d.y) }
-                    })
-                    .annotations(annotations)
-                    .textWrap(30)
-
-                d3.select("svg")
-                    .append("g")
-                    .attr("class", "annotation-group")
-                    .call(makeAnnotations)
 
             });
-
-
-
 
 
 
@@ -796,67 +833,59 @@
                     .attr("stroke-dashoffset", 1000)
                     .transition()
                     .duration(1000)
-                    .ease(d3.easeQuad) //Try linear, quad, bounce... see other examples here - http://bl.ocks.org/hunzy/9929724
+                    .ease(d3.easeQuad) 
                     .attr("stroke-dashoffset", 0);
 
+                d3.select("svg").append('g').attr('class', 'text1')
+                d3.select("svg").append('g').attr('class', 'text2')
+
+
+                d3.select("g.text1")
+                    .append("text")
+                    .text("Highest Price: $79.7")
+                    .attr("x", x(new Date('11/16/2007')) - 100)
+                    .attr("y", y(82))
+                    .attr("fill", "#35f164e5")
+
+                d3.select("g.text2")
+                    .append("text")
+                    .text("Lowest Price: $10.34")
+                    .attr("x", x(new Date('11/4/1992')) - 70)
+                    .attr("y", y(3.34))
+                    .attr("fill", "#ff2f2f")
 
 
 
+                d3.select("svg").append('g').attr('class', 'text3')
+                d3.select("svg").append('g').attr('class', 'eve3-t')
+
+                d3.select("g.text3")
+                    .append("line")
+                    .attr("x1", x(new Date('7/14/2020')))
+                    .attr("y1", y(0))
+                    .attr("x2", x(new Date('7/14/2020')))
+                    .attr("y2", y(85))
+                    .attr("style", "stroke:#eeff00;stroke-width:1;'")
+                    .attr("stroke-dasharray", 5 + " " + 5);
 
 
-
-                const annotations = [{
-                    note: { label: "Highest Price: $79.7", wrap: 150 },
-                    className: "second",
-
-                    y: margin.top,
-                    data: { x: "11/16/2007" } //position the x based on an x scale
-                }, {
-                    note: { label: "Lowest Price: $10.34", wrap: 150 },
-                    className: "third",
-
-
-                    data: { x: "11/4/1992", y: 3.34 } //position the x based on an x scale
-                },
-
-                {
-                    note: { label: "Price Now: $23.28" },
-                    subject: {
-                        y1: margin.top,
-                        y2: height - margin.bottom
-                    },
-                    y: margin.top,
-                    data: { x: "7/14/2020" }
-                }
-
-
-                ]
-
-                const type = d3.annotationCustomType(
-                    d3.annotationXYThreshold,
-                    {
-                        "note": {
-                            "lineType": "none",
-                            "orientation": "top",
-                            "align": "middle"
-                        }
-                    }
-                )
-
-                const makeAnnotations = d3.annotation()
-                    .type(type)
-                    //Gives you access to any data objects in the annotations array
-                    .accessors({
-                        x: function (d) { return x(new Date(d.x)) },
-                        y: function (d) { return y(d.y) }
-                    })
-                    .annotations(annotations)
-                    .textWrap(30)
-
-                d3.select("svg")
-                    .append("g")
-                    .attr("class", "annotation-group")
-                    .call(makeAnnotations)
+                d3.select("g.eve3-t")
+                    .append("text")
+                    .append('tspan')
+                    .text("Price ")
+                    .attr("x", x(new Date('7/14/2020')) - 45)
+                    .attr("y", y(93))
+                    .attr("fill", "#eeff00")
+                    .append('tspan')
+                    .text("Now: ")
+                    .attr("x", x(new Date('7/14/2020')) - 45)
+                    .attr("y", y(89))
+                    .attr("fill", "#eeff00")
+                    .append('tspan')
+                    .text("$23.28")
+                    .attr("x", x(new Date('7/14/2020')) - 45)
+                    .attr("y", y(85))
+                    .attr("fill", "#eeff00");
 
             }
 
